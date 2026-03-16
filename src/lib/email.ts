@@ -5,7 +5,7 @@ const OWNER_TEMPLATE_ID = "template_wzl67e5";
 const CUSTOMER_TEMPLATE_ID = "template_3d4bks5";
 const PUBLIC_KEY = "xzws2Uf1NV-_9gmub";
 
-interface BookingEmailData {
+export interface BookingEmailData {
   customerName: string;
   customerPhone: string;
   customerEmail: string;
@@ -15,15 +15,11 @@ interface BookingEmailData {
   servicePrice: string;
   date: string;
   time: string;
+  icsData: string; // Base64 encoded .ics obsah pro kalendář
 }
 
-// Pošle email MAJITELI (tobě) o nové rezervaci — obsahuje info o zákazníkovi
+// Pošle email MAJITELI (tobě) o nové rezervaci — obsahuje info o zákazníkovi + .ics pro kalendář
 export async function sendOwnerNotification(data: BookingEmailData) {
-  if (!SERVICE_ID || !OWNER_TEMPLATE_ID || !PUBLIC_KEY) {
-    console.warn("EmailJS není nakonfigurován - email majiteli nebyl odeslán");
-    return;
-  }
-
   await emailjs.send(
     SERVICE_ID,
     OWNER_TEMPLATE_ID,
@@ -38,6 +34,7 @@ export async function sendOwnerNotification(data: BookingEmailData) {
       service_price: data.servicePrice,
       date: data.date,
       time: data.time,
+      ics_data: data.icsData,
     },
     PUBLIC_KEY
   );
@@ -45,11 +42,6 @@ export async function sendOwnerNotification(data: BookingEmailData) {
 
 // Pošle email ZÁKAZNÍKOVI s potvrzením a adresou
 export async function sendCustomerConfirmation(data: BookingEmailData) {
-  if (!SERVICE_ID || !CUSTOMER_TEMPLATE_ID || !PUBLIC_KEY) {
-    console.warn("EmailJS není nakonfigurován - email zákazníkovi nebyl odeslán");
-    return;
-  }
-
   if (!data.customerEmail) {
     console.warn("Zákazník neuvedl email - potvrzení nebylo odesláno");
     return;
@@ -67,6 +59,7 @@ export async function sendCustomerConfirmation(data: BookingEmailData) {
       time: data.time,
       address: "Na Hřebenech I 673/19, Praha 4",
       phone: "+420 608 144 005",
+      ics_data: data.icsData,
     },
     PUBLIC_KEY
   );

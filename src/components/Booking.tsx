@@ -145,6 +145,15 @@ export default function Booking() {
         appointment_time: selectedTime,
       });
 
+      // 2. Generuj .ics pro kalendář
+      const icsContent = generateICS(
+        selectedDate,
+        selectedTime,
+        service.name,
+        formData.name
+      );
+      const icsBase64 = btoa(unescape(encodeURIComponent(icsContent)));
+
       const emailData = {
         customerName: formData.name,
         customerPhone: formData.phone,
@@ -155,33 +164,21 @@ export default function Booking() {
         servicePrice: service.price,
         date: selectedDate.toLocaleDateString("cs-CZ"),
         time: selectedTime,
+        icsData: icsBase64,
       };
 
-      // 2. Pošli email TOBĚ (majiteli) s info o zákazníkovi
+      // 3. Pošli email TOBĚ (majiteli) s info o zákazníkovi + .ics pro kalendář
       await sendOwnerNotification(emailData).catch(() => {
         console.warn("Email majiteli se nepodařilo odeslat");
       });
 
-      // 3. Pošli potvrzovací email ZÁKAZNÍKOVI s adresou
+      // 4. Pošli potvrzovací email ZÁKAZNÍKOVI s adresou
       await sendCustomerConfirmation(emailData).catch(() => {
         console.warn("Email zákazníkovi se nepodařilo odeslat");
       });
 
-      // 4. Stáhni .ics soubor pro zákazníka (přidání do jejich kalendáře)
-      const customerICS = generateICS(
-        selectedDate,
-        selectedTime,
-        service.name,
-        formData.name
-      );
-      downloadICS(
-        customerICS,
-        `fixnshine-rezervace-${dateStr}.ics`
-      );
-
-      // 4. Stáhni .ics i pro majitele (přidání do tvého kalendáře)
-      // Tento soubor se stáhne jen na tvém zařízení — zákazník ho neuvidí
-      // Pro automatické propojení s kalendářem použij email s .ics přílohou
+      // 5. Stáhni .ics soubor pro zákazníka
+      downloadICS(icsContent, `fixnshine-rezervace-${dateStr}.ics`);
 
       setIsSubmitted(true);
     } catch (err) {

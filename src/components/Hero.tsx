@@ -6,11 +6,11 @@ export default function Hero() {
   return (
     <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
       {/* Logo as background - centered, large, subtle */}
-      <div className="absolute inset-0 flex items-center justify-center">
+      <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <img
           src={logo}
           alt=""
-          className="w-[600px] md:w-[800px] lg:w-[1000px] max-w-none opacity-15 object-contain select-none pointer-events-none"
+          className="w-[80%] max-w-[800px] opacity-10 object-contain select-none pointer-events-none"
         />
       </div>
 

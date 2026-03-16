@@ -42,7 +42,7 @@ function generateICS(
     `DTEND:${format(end)}`,
     `SUMMARY:FixNShine - ${service}`,
     `DESCRIPTION:Rezervace pro ${name}\\nSlužba: ${service}`,
-    "LOCATION:FixNShine",
+    "LOCATION:Na Hřebenech I 673/19, Praha 4",
     "BEGIN:VALARM",
     "TRIGGER:-P1D",
     "ACTION:DISPLAY",
@@ -83,7 +83,6 @@ export default function Booking() {
       formData.name
     );
 
-    // Download .ics file for Apple Calendar
     const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
     const url = URL.createObjectURL(blob);
     const link = document.createElement("a");
@@ -100,7 +99,7 @@ export default function Booking() {
 
   if (isSubmitted) {
     return (
-      <section id="rezervace" className="py-24 px-6 bg-surface">
+      <section id="rezervace" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface">
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -109,15 +108,15 @@ export default function Booking() {
           <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check size={40} className="text-gold" />
           </div>
-          <h2 className="text-3xl font-bold mb-4">Rezervace odeslána!</h2>
-          <p className="text-text-secondary mb-4">
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Rezervace odeslána!</h2>
+          <p className="text-text-secondary mb-4 text-sm sm:text-base">
             Děkujeme, {formData.name}! Vaše rezervace na{" "}
             <strong className="text-gold">
               {selectedDate?.toLocaleDateString("cs-CZ")} v {selectedTime}
             </strong>{" "}
             byla zaznamenána.
           </p>
-          <p className="text-text-secondary mb-8">
+          <p className="text-text-secondary mb-8 text-sm sm:text-base">
             Soubor pro Apple Kalendář (.ics) byl stažen — otevřete ho pro
             přidání připomínky do kalendáře. Ozveme se vám pro potvrzení.
           </p>
@@ -139,40 +138,40 @@ export default function Booking() {
   }
 
   return (
-    <section id="rezervace" className="py-24 px-6 bg-surface">
-      <div className="max-w-6xl mx-auto">
+    <section id="rezervace" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface">
+      <div className="w-full max-w-[1400px] mx-auto">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <span className="text-gold text-sm uppercase tracking-widest font-medium">
             Rezervace
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
             Zarezervujte si{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold-light">
               termín
             </span>
           </h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             Vyberte si službu, datum a čas. Po odeslání obdržíte soubor pro
             přidání do Apple Kalendáře s automatickými připomínkami.
           </p>
         </motion.div>
 
         <form onSubmit={handleSubmit}>
-          <div className="grid lg:grid-cols-2 gap-10">
-            {/* Left - Calendar & Time */}
+          <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
+            {/* Left - Calendar & Service */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               {/* Service selection */}
               <div>
@@ -184,7 +183,7 @@ export default function Booking() {
                   {services.map((service) => (
                     <label
                       key={service.id}
-                      className={`flex items-center justify-between p-4 rounded-lg cursor-pointer transition-all duration-200 border ${
+                      className={`flex items-center justify-between p-3 sm:p-4 rounded-lg cursor-pointer transition-all duration-200 border ${
                         selectedService === service.id
                           ? "border-gold bg-gold/10 text-text-primary"
                           : "border-border bg-primary/50 text-text-secondary hover:border-gold/30"
@@ -200,7 +199,7 @@ export default function Booking() {
                           className="sr-only"
                         />
                         <div
-                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center ${
+                          className={`w-4 h-4 rounded-full border-2 flex items-center justify-center flex-shrink-0 ${
                             selectedService === service.id
                               ? "border-gold"
                               : "border-text-muted"
@@ -210,9 +209,9 @@ export default function Booking() {
                             <div className="w-2 h-2 rounded-full bg-gold" />
                           )}
                         </div>
-                        <span className="text-sm">{service.name}</span>
+                        <span className="text-xs sm:text-sm">{service.name}</span>
                       </div>
-                      <span className="text-gold text-sm font-semibold">
+                      <span className="text-gold text-xs sm:text-sm font-semibold ml-2 whitespace-nowrap">
                         {service.price}
                       </span>
                     </label>
@@ -226,7 +225,7 @@ export default function Booking() {
                   <Calendar size={18} className="text-gold" />
                   Vyberte datum
                 </label>
-                <div className="bg-primary/50 border border-border rounded-xl p-4 inline-block [&_.rdp-root]:text-text-primary [&_.rdp-day]:text-text-secondary [&_.rdp-selected_.rdp-day]:bg-gold [&_.rdp-selected_.rdp-day]:text-primary [&_.rdp-today:not(.rdp-selected)_.rdp-day]:text-gold [&_.rdp-chevron]:fill-gold [&_.rdp-disabled_.rdp-day]:text-text-muted/30">
+                <div className="bg-primary/50 border border-border rounded-xl p-3 sm:p-4 inline-block w-full sm:w-auto [&_.rdp-root]:text-text-primary [&_.rdp-root]:w-full [&_.rdp-day]:text-text-secondary [&_.rdp-selected_.rdp-day]:bg-gold [&_.rdp-selected_.rdp-day]:text-primary [&_.rdp-today:not(.rdp-selected)_.rdp-day]:text-gold [&_.rdp-chevron]:fill-gold [&_.rdp-disabled_.rdp-day]:text-text-muted/30">
                   <DayPicker
                     mode="single"
                     selected={selectedDate}
@@ -244,7 +243,7 @@ export default function Booking() {
               whileInView={{ opacity: 1, x: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.6 }}
-              className="space-y-8"
+              className="space-y-6 sm:space-y-8"
             >
               {/* Time selection */}
               <div>
@@ -258,7 +257,7 @@ export default function Booking() {
                       key={time}
                       type="button"
                       onClick={() => setSelectedTime(time)}
-                      className={`py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                      className={`py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
                         selectedTime === time
                           ? "border-gold bg-gold/10 text-gold"
                           : "border-border bg-primary/50 text-text-secondary hover:border-gold/30"
@@ -271,10 +270,10 @@ export default function Booking() {
               </div>
 
               {/* Contact form */}
-              <div className="space-y-4">
+              <div className="space-y-3 sm:space-y-4">
                 <div>
-                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2">
-                    <User size={18} className="text-gold" />
+                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
+                    <User size={16} className="text-gold" />
                     Jméno a příjmení
                   </label>
                   <input
@@ -284,14 +283,14 @@ export default function Booking() {
                     onChange={(e) =>
                       setFormData({ ...formData, name: e.target.value })
                     }
-                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
+                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
                     placeholder="Jan Novák"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2">
-                    <Phone size={18} className="text-gold" />
+                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
+                    <Phone size={16} className="text-gold" />
                     Telefon
                   </label>
                   <input
@@ -301,14 +300,14 @@ export default function Booking() {
                     onChange={(e) =>
                       setFormData({ ...formData, phone: e.target.value })
                     }
-                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
+                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
                     placeholder="+420 123 456 789"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2">
-                    <Mail size={18} className="text-gold" />
+                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
+                    <Mail size={16} className="text-gold" />
                     Email
                   </label>
                   <input
@@ -317,14 +316,14 @@ export default function Booking() {
                     onChange={(e) =>
                       setFormData({ ...formData, email: e.target.value })
                     }
-                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
+                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
                     placeholder="jan@email.cz"
                   />
                 </div>
 
                 <div>
-                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2">
-                    <Car size={18} className="text-gold" />
+                  <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
+                    <Car size={16} className="text-gold" />
                     Značka a model vozu
                   </label>
                   <input
@@ -333,13 +332,13 @@ export default function Booking() {
                     onChange={(e) =>
                       setFormData({ ...formData, car: e.target.value })
                     }
-                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
+                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors"
                     placeholder="BMW 3 Series"
                   />
                 </div>
 
                 <div>
-                  <label className="text-text-primary font-medium mb-2 block">
+                  <label className="text-text-primary font-medium mb-2 block text-sm">
                     Poznámka (volitelné)
                   </label>
                   <textarea
@@ -348,7 +347,7 @@ export default function Booking() {
                       setFormData({ ...formData, note: e.target.value })
                     }
                     rows={3}
-                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors resize-none"
+                    className="w-full bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors resize-none"
                     placeholder="Speciální požadavky..."
                   />
                 </div>

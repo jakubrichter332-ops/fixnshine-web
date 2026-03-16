@@ -1,6 +1,5 @@
 import { useState, useEffect } from "react";
 import { Menu, X } from "lucide-react";
-import logo from "../assets/logo.jpeg";
 
 const navLinks = [
   { label: "Služby", href: "#sluzby" },
@@ -27,14 +26,16 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
+      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         {/* Logo */}
-        <a href="#">
-          <img src={logo} alt="FixNShine" className="h-12" />
+        <a href="#" className="text-xl sm:text-2xl font-bold tracking-tight">
+          <span className="text-gold">FIX</span>
+          <span className="text-text-primary">N</span>
+          <span className="text-gold">SHINE</span>
         </a>
 
         {/* Desktop links */}
-        <div className="hidden md:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
               key={link.href}
@@ -55,7 +56,7 @@ export default function Navbar() {
         {/* Mobile menu button */}
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
-          className="md:hidden text-text-primary"
+          className="lg:hidden text-text-primary"
         >
           {isMobileOpen ? <X size={24} /> : <Menu size={24} />}
         </button>
@@ -63,7 +64,7 @@ export default function Navbar() {
 
       {/* Mobile menu */}
       {isMobileOpen && (
-        <div className="md:hidden bg-primary/98 backdrop-blur-md border-t border-border">
+        <div className="lg:hidden bg-primary/98 backdrop-blur-md border-t border-border">
           <div className="flex flex-col items-center gap-6 py-8">
             {navLinks.map((link) => (
               <a

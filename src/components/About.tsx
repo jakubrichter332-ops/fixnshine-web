@@ -26,9 +26,9 @@ const features = [
 
 export default function About() {
   return (
-    <section id="o-nas" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
-        <div className="grid lg:grid-cols-2 gap-16 items-center">
+    <section id="o-nas" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1400px] mx-auto">
+        <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left side - text */}
           <motion.div
             initial={{ opacity: 0, x: -30 }}
@@ -39,20 +39,20 @@ export default function About() {
             <span className="text-gold text-sm uppercase tracking-widest font-medium">
               O nás
             </span>
-            <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
+            <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
               Proč{" "}
               <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold-light">
                 FixNShine
               </span>
               ?
             </h2>
-            <p className="text-text-secondary leading-relaxed mb-6">
+            <p className="text-text-secondary leading-relaxed mb-4 sm:mb-6 text-sm sm:text-base">
               FixNShine není jen obyčejná myčka. Jsme tým nadšenců, kteří věří,
               že péče o auto by měla být zážitek. Každý vůz, který k nám přijede,
               dostane individuální pozornost a profesionální péči od začátku
               do konce.
             </p>
-            <p className="text-text-secondary leading-relaxed mb-8">
+            <p className="text-text-secondary leading-relaxed mb-6 sm:mb-8 text-sm sm:text-base">
               Specializujeme se na ruční mytí a detailing, protože jen lidská
               ruka dokáže odhalit a ošetřit každý detail. Žádné automaty, žádné
               kompromisy — pouze precizní ruční práce a prémiové přípravky.
@@ -67,7 +67,7 @@ export default function About() {
           </motion.div>
 
           {/* Right side - features grid */}
-          <div className="grid grid-cols-2 gap-6">
+          <div className="grid grid-cols-2 gap-4 sm:gap-6">
             {features.map((feature, index) => (
               <motion.div
                 key={feature.title}
@@ -75,13 +75,13 @@ export default function About() {
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
                 transition={{ duration: 0.5, delay: index * 0.1 }}
-                className="bg-surface border border-border rounded-xl p-6 hover:border-gold/30 transition-all duration-300"
+                className="bg-surface border border-border rounded-xl p-4 sm:p-6 hover:border-gold/30 transition-all duration-300"
               >
-                <div className="text-gold mb-4">{feature.icon}</div>
-                <h3 className="text-text-primary font-semibold mb-2">
+                <div className="text-gold mb-3 sm:mb-4">{feature.icon}</div>
+                <h3 className="text-text-primary font-semibold mb-1 sm:mb-2 text-sm sm:text-base">
                   {feature.title}
                 </h3>
-                <p className="text-text-secondary text-sm leading-relaxed">
+                <p className="text-text-secondary text-xs sm:text-sm leading-relaxed">
                   {feature.description}
                 </p>
               </motion.div>

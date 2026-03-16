@@ -65,33 +65,33 @@ const services: ServiceCard[] = [
 
 export default function Services() {
   return (
-    <section id="sluzby" className="py-24 px-6">
-      <div className="max-w-7xl mx-auto">
+    <section id="sluzby" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
+      <div className="w-full max-w-[1400px] mx-auto">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
           viewport={{ once: true }}
           transition={{ duration: 0.6 }}
-          className="text-center mb-16"
+          className="text-center mb-10 sm:mb-16"
         >
           <span className="text-gold text-sm uppercase tracking-widest font-medium">
             Ceník služeb
           </span>
-          <h2 className="text-4xl md:text-5xl font-bold mt-4 mb-6">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
             Vyberte si svůj{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold-light">
               program
             </span>
           </h2>
-          <p className="text-text-secondary max-w-2xl mx-auto">
+          <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
             Od základního mytí až po kompletní detailing — každý vůz si zaslouží
             individuální přístup a špičkovou péči.
           </p>
         </motion.div>
 
         {/* Service cards grid */}
-        <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {services.map((service, index) => (
             <motion.div
               key={service.program}
@@ -99,7 +99,7 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative group rounded-xl p-8 transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative group rounded-xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 ${
                 service.popular
                   ? "bg-gradient-to-b from-gold/10 to-surface border-2 border-gold/30 hover:border-gold/60"
                   : "bg-surface border border-border hover:border-gold/30"
@@ -107,13 +107,13 @@ export default function Services() {
             >
               {/* Popular badge */}
               {service.popular && (
-                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-primary text-xs font-bold uppercase tracking-widest px-4 py-1 rounded-full">
+                <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-primary text-xs font-bold uppercase tracking-widest px-4 py-1 rounded-full whitespace-nowrap">
                   Nejoblíbenější
                 </div>
               )}
 
               {/* Icon */}
-              <div className="text-gold mb-5">{service.icon}</div>
+              <div className="text-gold mb-4 sm:mb-5">{service.icon}</div>
 
               {/* Program number */}
               <span className="text-text-muted text-xs uppercase tracking-widest">
@@ -121,7 +121,7 @@ export default function Services() {
               </span>
 
               {/* Title */}
-              <h3 className="text-xl font-semibold mt-2 mb-3 text-text-primary group-hover:text-gold transition-colors">
+              <h3 className="text-lg sm:text-xl font-semibold mt-2 mb-3 text-text-primary group-hover:text-gold transition-colors">
                 {service.title}
               </h3>
 
@@ -132,7 +132,9 @@ export default function Services() {
 
               {/* Price */}
               <div className="mt-auto">
-                <span className="text-gold text-3xl font-bold">{service.price}</span>
+                <span className="text-gold text-2xl sm:text-3xl font-bold">
+                  {service.price}
+                </span>
               </div>
 
               {/* CTA */}

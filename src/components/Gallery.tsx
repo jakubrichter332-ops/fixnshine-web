@@ -5,7 +5,7 @@ import img01 from "../assets/gallery/01-bmw7-exterior.jpeg";
 import img02 from "../assets/gallery/02-bmw7-side.jpeg";
 import img03 from "../assets/gallery/03-bmw7-front.jpeg";
 import img04 from "../assets/gallery/04-bmw7-interior.jpeg";
-import img05 from "../assets/gallery/05-seat-interior.jpeg";
+import img05 from "../assets/gallery/05-bmw3-interior-after.jpeg";
 import img06 from "../assets/gallery/06-seat-dashboard.jpeg";
 import img07 from "../assets/gallery/07-bmw3-interior.jpeg";
 import img08 from "../assets/gallery/08-bmw3-front.jpeg";
@@ -13,7 +13,7 @@ import img09 from "../assets/gallery/09-bmw3-side.jpeg";
 
 const galleryItems = [
   { id: 1, src: img01, label: "BMW 7 — Exteriér po detailingu" },
-  { id: 2, src: img05, label: "Čištění interiéru — před" },
+  { id: 2, src: img05, label: "BMW 3 — Interiér po základním čištění (bez tepování)" },
   { id: 3, src: img04, label: "BMW 7 — Luxusní interiér" },
   { id: 4, src: img02, label: "BMW 7 — Lesk po nano vosku" },
   { id: 5, src: img07, label: "BMW 3 — Interiér po čištění" },

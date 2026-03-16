@@ -65,9 +65,8 @@ const services: ServiceCard[] = [
 
 export default function Services() {
   return (
-    <section id="sluzby" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[1400px] mx-auto">
-        {/* Section header */}
+    <section id="sluzby" className="py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -90,7 +89,6 @@ export default function Services() {
           </p>
         </motion.div>
 
-        {/* Service cards grid */}
         <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-6">
           {services.map((service, index) => (
             <motion.div
@@ -99,45 +97,38 @@ export default function Services() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ duration: 0.5, delay: index * 0.1 }}
-              className={`relative group rounded-xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 ${
+              className={`relative group rounded-xl p-6 sm:p-8 transition-all duration-300 hover:-translate-y-1 flex flex-col ${
                 service.popular
                   ? "bg-gradient-to-b from-gold/10 to-surface border-2 border-gold/30 hover:border-gold/60"
                   : "bg-surface border border-border hover:border-gold/30"
               }`}
             >
-              {/* Popular badge */}
               {service.popular && (
                 <div className="absolute -top-3 left-1/2 -translate-x-1/2 bg-gold text-primary text-xs font-bold uppercase tracking-widest px-4 py-1 rounded-full whitespace-nowrap">
                   Nejoblíbenější
                 </div>
               )}
 
-              {/* Icon */}
               <div className="text-gold mb-4 sm:mb-5">{service.icon}</div>
 
-              {/* Program number */}
               <span className="text-text-muted text-xs uppercase tracking-widest">
                 {service.program}
               </span>
 
-              {/* Title */}
               <h3 className="text-lg sm:text-xl font-semibold mt-2 mb-3 text-text-primary group-hover:text-gold transition-colors">
                 {service.title}
               </h3>
 
-              {/* Description */}
-              <p className="text-text-secondary text-sm leading-relaxed mb-6">
+              <p className="text-text-secondary text-sm leading-relaxed mb-6 flex-grow">
                 {service.description}
               </p>
 
-              {/* Price */}
-              <div className="mt-auto">
+              <div>
                 <span className="text-gold text-2xl sm:text-3xl font-bold">
                   {service.price}
                 </span>
               </div>
 
-              {/* CTA */}
               <a
                 href="#rezervace"
                 className={`block text-center mt-6 py-3 rounded text-sm font-semibold uppercase tracking-widest transition-all duration-200 ${

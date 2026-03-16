@@ -4,24 +4,23 @@ import logo from "../assets/logo.jpeg";
 
 export default function Hero() {
   return (
-    <section className="relative min-h-screen w-full flex items-center justify-center overflow-hidden">
-      {/* Logo as background - centered, large, subtle */}
+    <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
+      {/* Logo as background */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <img
           src={logo}
           alt=""
-          className="w-[80%] max-w-[800px] opacity-10 object-contain select-none pointer-events-none"
+          className="w-[60vw] max-w-[700px] opacity-10 object-contain select-none pointer-events-none"
         />
       </div>
 
-      {/* Dark overlay gradient */}
+      {/* Gradient overlays */}
       <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/80 to-primary" />
+      <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+        <div className="w-[40vw] max-w-[500px] aspect-square bg-gold/5 rounded-full blur-[100px]" />
+      </div>
 
-      {/* Subtle gold glow */}
-      <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] bg-gold/5 rounded-full blur-3xl" />
-
-      <div className="relative z-10 w-full max-w-5xl mx-auto px-4 sm:px-6 text-center">
-        {/* Badge */}
+      <div className="relative z-10 mx-auto max-w-5xl px-4 sm:px-6 lg:px-8 text-center">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
@@ -34,12 +33,11 @@ export default function Hero() {
           </span>
         </motion.div>
 
-        {/* Main heading */}
         <motion.h1
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.1 }}
-          className="text-4xl sm:text-5xl md:text-6xl lg:text-8xl font-bold leading-tight mb-4 sm:mb-6"
+          className="text-4xl sm:text-5xl md:text-6xl lg:text-7xl xl:text-8xl font-bold leading-tight mb-4 sm:mb-6"
         >
           Vaše auto si zaslouží
           <br />
@@ -48,18 +46,16 @@ export default function Hero() {
           </span>
         </motion.h1>
 
-        {/* Subtitle */}
         <motion.p
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.8, delay: 0.2 }}
-          className="text-text-secondary text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed px-2"
+          className="text-text-secondary text-base sm:text-lg md:text-xl max-w-2xl mx-auto mb-8 sm:mb-10 leading-relaxed"
         >
           Profesionální ruční mytí a detailing s důrazem na každý detail.
           Používáme prémiovou autokosmetiku pro dokonalý výsledek.
         </motion.p>
 
-        {/* CTA Buttons */}
         <motion.div
           initial={{ opacity: 0, y: 30 }}
           animate={{ opacity: 1, y: 0 }}
@@ -80,12 +76,11 @@ export default function Hero() {
           </a>
         </motion.div>
 
-        {/* Stats */}
         <motion.div
           initial={{ opacity: 0 }}
           animate={{ opacity: 1 }}
           transition={{ duration: 1, delay: 0.6 }}
-          className="mt-14 sm:mt-20 grid grid-cols-3 gap-4 sm:gap-8 max-w-lg mx-auto"
+          className="mt-14 sm:mt-20 grid grid-cols-3 gap-4 sm:gap-8 max-w-md mx-auto"
         >
           {[
             { value: "500+", label: "Spokojených zákazníků" },
@@ -104,7 +99,6 @@ export default function Hero() {
         </motion.div>
       </div>
 
-      {/* Scroll indicator */}
       <motion.div
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

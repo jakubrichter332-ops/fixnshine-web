@@ -1,7 +1,6 @@
 @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap');
 @import "tailwindcss";
 
-/* Vlastní téma - luxusní tmavé barvy se zlatými akcenty */
 @theme {
   --color-primary: #0a0a0a;
   --color-secondary: #1a1a1a;
@@ -20,53 +19,53 @@
   --font-body: "Inter", system-ui, sans-serif;
 }
 
-/* Globální styly */
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-}
+@layer base {
+  *, *::before, *::after {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-html {
-  scroll-behavior: smooth;
-  overflow-x: hidden;
-}
+  html, body {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+    scroll-behavior: smooth;
+  }
 
-body {
-  font-family: var(--font-body);
-  background-color: var(--color-primary);
-  color: var(--color-text-primary);
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  overflow-x: hidden;
-  width: 100%;
-}
+  body {
+    font-family: var(--font-body);
+    background-color: var(--color-primary);
+    color: var(--color-text-primary);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
 
-#root {
-  overflow-x: hidden;
-  width: 100%;
-}
+  #root {
+    width: 100%;
+    max-width: 100vw;
+    overflow-x: hidden;
+  }
 
-/* Scrollbar styling pro luxusní vzhled */
-::-webkit-scrollbar {
-  width: 8px;
-}
+  ::-webkit-scrollbar {
+    width: 8px;
+  }
 
-::-webkit-scrollbar-track {
-  background: var(--color-primary);
-}
+  ::-webkit-scrollbar-track {
+    background: var(--color-primary);
+  }
 
-::-webkit-scrollbar-thumb {
-  background: var(--color-gold-dark);
-  border-radius: 4px;
-}
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-gold-dark);
+    border-radius: 4px;
+  }
 
-::-webkit-scrollbar-thumb:hover {
-  background: var(--color-gold);
-}
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-gold);
+  }
 
-/* Selection */
-::selection {
-  background-color: var(--color-gold);
-  color: var(--color-primary);
+  ::selection {
+    background-color: var(--color-gold);
+    color: var(--color-primary);
+  }
 }

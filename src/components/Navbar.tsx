@@ -26,15 +26,13 @@ export default function Navbar() {
           : "bg-transparent"
       }`}
     >
-      <div className="w-full max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
-        {/* Logo */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 py-4 flex items-center justify-between">
         <a href="#" className="text-xl sm:text-2xl font-bold tracking-tight">
           <span className="text-gold">FIX</span>
           <span className="text-text-primary">N</span>
           <span className="text-gold">SHINE</span>
         </a>
 
-        {/* Desktop links */}
         <div className="hidden lg:flex items-center gap-8">
           {navLinks.map((link) => (
             <a
@@ -53,7 +51,6 @@ export default function Navbar() {
           </a>
         </div>
 
-        {/* Mobile menu button */}
         <button
           onClick={() => setIsMobileOpen(!isMobileOpen)}
           className="lg:hidden text-text-primary"
@@ -62,7 +59,6 @@ export default function Navbar() {
         </button>
       </div>
 
-      {/* Mobile menu */}
       {isMobileOpen && (
         <div className="lg:hidden bg-primary/98 backdrop-blur-md border-t border-border">
           <div className="flex flex-col items-center gap-6 py-8">

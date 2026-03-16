@@ -9,14 +9,16 @@ import Footer from "./components/Footer";
 
 function App() {
   return (
-    <div className="min-h-screen bg-primary w-full overflow-x-hidden">
+    <div className="min-h-screen bg-primary overflow-x-hidden">
       <Navbar />
-      <Hero />
-      <Services />
-      <Gallery />
-      <About />
-      <Booking />
-      <Contact />
+      <main>
+        <Hero />
+        <Services />
+        <Gallery />
+        <About />
+        <Booking />
+        <Contact />
+      </main>
       <Footer />
     </div>
   );

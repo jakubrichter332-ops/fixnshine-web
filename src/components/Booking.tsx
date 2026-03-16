@@ -1,8 +1,19 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { motion } from "framer-motion";
 import { DayPicker } from "react-day-picker";
-import { Calendar, Clock, User, Phone, Mail, Car, Check } from "lucide-react";
+import {
+  Calendar,
+  Clock,
+  User,
+  Phone,
+  Mail,
+  Car,
+  Check,
+  Loader2,
+} from "lucide-react";
 import "react-day-picker/style.css";
+import { createBooking, getBookedSlots } from "../lib/supabase";
+import { sendOwnerNotification, sendCustomerConfirmation } from "../lib/email";
 
 const services = [
   { id: "1", name: "Kompletní čištění exteriéru", price: "890 Kč" },
@@ -13,9 +24,16 @@ const services = [
   { id: "6", name: "Individuální tepování", price: "Dle domluvy" },
 ];
 
-const timeSlots = [
-  "08:00", "09:00", "10:00", "11:00",
-  "12:00", "13:00", "14:00", "15:00", "16:00",
+const ALL_TIME_SLOTS = [
+  "08:00",
+  "09:00",
+  "10:00",
+  "11:00",
+  "12:00",
+  "13:00",
+  "14:00",
+  "15:00",
+  "16:00",
 ];
 
 function generateICS(
@@ -58,10 +76,23 @@ function generateICS(
   ].join("\r\n");
 }
 
+function downloadICS(content: string, filename: string) {
+  const blob = new Blob([content], { type: "text/calendar;charset=utf-8" });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement("a");
+  link.href = url;
+  link.download = filename;
+  link.click();
+  URL.revokeObjectURL(url);
+}
+
 export default function Booking() {
   const [selectedDate, setSelectedDate] = useState<Date | undefined>();
   const [selectedTime, setSelectedTime] = useState<string>("");
   const [selectedService, setSelectedService] = useState<string>("");
+  const [bookedSlots, setBookedSlots] = useState<string[]>([]);
+  const [loadingSlots, setLoadingSlots] = useState(false);
+  const [isSubmitting, setIsSubmitting] = useState(false);
   const [formData, setFormData] = useState({
     name: "",
     phone: "",
@@ -71,35 +102,110 @@ export default function Booking() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
 
-  const handleSubmit = (e: React.FormEvent) => {
+  // Když uživatel vybere datum, načti obsazené sloty z databáze
+  useEffect(() => {
+    if (!selectedDate) {
+      setBookedSlots([]);
+      return;
+    }
+
+    const dateStr = selectedDate.toISOString().split("T")[0];
+    setLoadingSlots(true);
+    setSelectedTime(""); // Reset vybraného času
+
+    getBookedSlots(dateStr)
+      .then((slots) => setBookedSlots(slots))
+      .catch(() => setBookedSlots([]))
+      .finally(() => setLoadingSlots(false));
+  }, [selectedDate]);
+
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!selectedDate || !selectedTime || !selectedService) return;
 
     const service = services.find((s) => s.id === selectedService);
-    const icsContent = generateICS(
-      selectedDate,
-      selectedTime,
-      service?.name || "",
-      formData.name
-    );
+    if (!service) return;
 
-    const blob = new Blob([icsContent], { type: "text/calendar;charset=utf-8" });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement("a");
-    link.href = url;
-    link.download = `fixnshine-rezervace-${selectedDate.toISOString().split("T")[0]}.ics`;
-    link.click();
-    URL.revokeObjectURL(url);
+    setIsSubmitting(true);
 
-    setIsSubmitted(true);
+    try {
+      const dateStr = selectedDate.toISOString().split("T")[0];
+
+      // 1. Ulož rezervaci do Supabase databáze
+      await createBooking({
+        customer_name: formData.name,
+        customer_phone: formData.phone,
+        customer_email: formData.email,
+        car: formData.car,
+        note: formData.note,
+        service_id: service.id,
+        service_name: service.name,
+        service_price: service.price,
+        appointment_date: dateStr,
+        appointment_time: selectedTime,
+      });
+
+      const emailData = {
+        customerName: formData.name,
+        customerPhone: formData.phone,
+        customerEmail: formData.email,
+        car: formData.car,
+        note: formData.note,
+        serviceName: service.name,
+        servicePrice: service.price,
+        date: selectedDate.toLocaleDateString("cs-CZ"),
+        time: selectedTime,
+      };
+
+      // 2. Pošli email TOBĚ (majiteli) s info o zákazníkovi
+      await sendOwnerNotification(emailData).catch(() => {
+        console.warn("Email majiteli se nepodařilo odeslat");
+      });
+
+      // 3. Pošli potvrzovací email ZÁKAZNÍKOVI s adresou
+      await sendCustomerConfirmation(emailData).catch(() => {
+        console.warn("Email zákazníkovi se nepodařilo odeslat");
+      });
+
+      // 4. Stáhni .ics soubor pro zákazníka (přidání do jejich kalendáře)
+      const customerICS = generateICS(
+        selectedDate,
+        selectedTime,
+        service.name,
+        formData.name
+      );
+      downloadICS(
+        customerICS,
+        `fixnshine-rezervace-${dateStr}.ics`
+      );
+
+      // 4. Stáhni .ics i pro majitele (přidání do tvého kalendáře)
+      // Tento soubor se stáhne jen na tvém zařízení — zákazník ho neuvidí
+      // Pro automatické propojení s kalendářem použij email s .ics přílohou
+
+      setIsSubmitted(true);
+    } catch (err) {
+      console.error("Chyba při ukládání rezervace:", err);
+      alert(
+        "Omlouváme se, při odesílání rezervace došlo k chybě. Zkuste to prosím znovu nebo nás kontaktujte telefonicky."
+      );
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   const today = new Date();
   today.setHours(0, 0, 0, 0);
 
+  // Neděle (0) a sobotu (6) zakážeme
+  const disabledDays = [{ before: today }, { dayOfWeek: [0] }];
+
   if (isSubmitted) {
     return (
-      <section id="rezervace" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface">
+      <section
+        id="rezervace"
+        className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface"
+      >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
           animate={{ opacity: 1, scale: 1 }}
@@ -108,7 +214,9 @@ export default function Booking() {
           <div className="w-20 h-20 bg-gold/10 rounded-full flex items-center justify-center mx-auto mb-6">
             <Check size={40} className="text-gold" />
           </div>
-          <h2 className="text-2xl sm:text-3xl font-bold mb-4">Rezervace odeslána!</h2>
+          <h2 className="text-2xl sm:text-3xl font-bold mb-4">
+            Rezervace odeslána!
+          </h2>
           <p className="text-text-secondary mb-4 text-sm sm:text-base">
             Děkujeme, {formData.name}! Vaše rezervace na{" "}
             <strong className="text-gold">
@@ -117,8 +225,8 @@ export default function Booking() {
             byla zaznamenána.
           </p>
           <p className="text-text-secondary mb-8 text-sm sm:text-base">
-            Soubor pro Apple Kalendář (.ics) byl stažen — otevřete ho pro
-            přidání připomínky do kalendáře. Ozveme se vám pro potvrzení.
+            Soubor pro Kalendář (.ics) byl stažen — otevřete ho pro přidání
+            připomínky. Ozveme se vám pro potvrzení.
           </p>
           <button
             onClick={() => {
@@ -126,7 +234,14 @@ export default function Booking() {
               setSelectedDate(undefined);
               setSelectedTime("");
               setSelectedService("");
-              setFormData({ name: "", phone: "", email: "", car: "", note: "" });
+              setBookedSlots([]);
+              setFormData({
+                name: "",
+                phone: "",
+                email: "",
+                car: "",
+                note: "",
+              });
             }}
             className="bg-gold hover:bg-gold-light text-primary px-8 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded"
           >
@@ -138,7 +253,10 @@ export default function Booking() {
   }
 
   return (
-    <section id="rezervace" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface">
+    <section
+      id="rezervace"
+      className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface"
+    >
       <div className="w-full max-w-[1400px] mx-auto">
         {/* Section header */}
         <motion.div
@@ -158,14 +276,14 @@ export default function Booking() {
             </span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
-            Vyberte si službu, datum a čas. Po odeslání obdržíte soubor pro
-            přidání do Apple Kalendáře s automatickými připomínkami.
+            Vyberte si službu, datum a čas. Po odeslání vám i nám přijde
+            potvrzení a termín se zobrazí jako obsazený.
           </p>
         </motion.div>
 
         <form onSubmit={handleSubmit}>
           <div className="grid lg:grid-cols-2 gap-8 lg:gap-10">
-            {/* Left - Calendar & Service */}
+            {/* Left - Service & Calendar */}
             <motion.div
               initial={{ opacity: 0, x: -20 }}
               whileInView={{ opacity: 1, x: 0 }}
@@ -209,7 +327,9 @@ export default function Booking() {
                             <div className="w-2 h-2 rounded-full bg-gold" />
                           )}
                         </div>
-                        <span className="text-xs sm:text-sm">{service.name}</span>
+                        <span className="text-xs sm:text-sm">
+                          {service.name}
+                        </span>
                       </div>
                       <span className="text-gold text-xs sm:text-sm font-semibold ml-2 whitespace-nowrap">
                         {service.price}
@@ -230,7 +350,7 @@ export default function Booking() {
                     mode="single"
                     selected={selectedDate}
                     onSelect={setSelectedDate}
-                    disabled={{ before: today }}
+                    disabled={disabledDays}
                     weekStartsOn={1}
                   />
                 </div>
@@ -250,23 +370,44 @@ export default function Booking() {
                 <label className="flex items-center gap-2 text-text-primary font-medium mb-3">
                   <Clock size={18} className="text-gold" />
                   Vyberte čas
+                  {loadingSlots && (
+                    <Loader2 size={14} className="animate-spin text-gold ml-1" />
+                  )}
                 </label>
-                <div className="grid grid-cols-3 gap-2">
-                  {timeSlots.map((time) => (
-                    <button
-                      key={time}
-                      type="button"
-                      onClick={() => setSelectedTime(time)}
-                      className={`py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
-                        selectedTime === time
-                          ? "border-gold bg-gold/10 text-gold"
-                          : "border-border bg-primary/50 text-text-secondary hover:border-gold/30"
-                      }`}
-                    >
-                      {time}
-                    </button>
-                  ))}
-                </div>
+
+                {!selectedDate ? (
+                  <p className="text-text-muted text-sm py-4">
+                    Nejdříve vyberte datum pro zobrazení dostupných časů.
+                  </p>
+                ) : (
+                  <div className="grid grid-cols-3 gap-2">
+                    {ALL_TIME_SLOTS.map((time) => {
+                      const isBooked = bookedSlots.includes(time);
+                      return (
+                        <button
+                          key={time}
+                          type="button"
+                          disabled={isBooked}
+                          onClick={() => setSelectedTime(time)}
+                          className={`py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
+                            isBooked
+                              ? "border-border/50 bg-primary/20 text-text-muted/40 cursor-not-allowed line-through"
+                              : selectedTime === time
+                              ? "border-gold bg-gold/10 text-gold"
+                              : "border-border bg-primary/50 text-text-secondary hover:border-gold/30"
+                          }`}
+                        >
+                          {time}
+                          {isBooked && (
+                            <span className="block text-[10px] no-underline leading-tight">
+                              obsazeno
+                            </span>
+                          )}
+                        </button>
+                      );
+                    })}
+                  </div>
+                )}
               </div>
 
               {/* Contact form */}
@@ -274,7 +415,7 @@ export default function Booking() {
                 <div>
                   <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
                     <User size={16} className="text-gold" />
-                    Jméno a příjmení
+                    Jméno a příjmení *
                   </label>
                   <input
                     type="text"
@@ -291,7 +432,7 @@ export default function Booking() {
                 <div>
                   <label className="flex items-center gap-2 text-text-primary font-medium mb-2 text-sm">
                     <Phone size={16} className="text-gold" />
-                    Telefon
+                    Telefon *
                   </label>
                   <input
                     type="tel"
@@ -356,15 +497,27 @@ export default function Booking() {
               {/* Submit */}
               <button
                 type="submit"
-                disabled={!selectedDate || !selectedTime || !selectedService}
-                className="w-full bg-gold hover:bg-gold-light disabled:bg-gold/30 disabled:cursor-not-allowed text-primary py-4 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded-lg"
+                disabled={
+                  !selectedDate ||
+                  !selectedTime ||
+                  !selectedService ||
+                  isSubmitting
+                }
+                className="w-full bg-gold hover:bg-gold-light disabled:bg-gold/30 disabled:cursor-not-allowed text-primary py-4 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded-lg flex items-center justify-center gap-2"
               >
-                Odeslat rezervaci
+                {isSubmitting ? (
+                  <>
+                    <Loader2 size={18} className="animate-spin" />
+                    Odesílám...
+                  </>
+                ) : (
+                  "Odeslat rezervaci"
+                )}
               </button>
 
               <p className="text-text-muted text-xs text-center">
-                Po odeslání obdržíte .ics soubor pro přidání do Apple Kalendáře
-                s připomínkami 1 den a 2 hodiny před termínem.
+                Po odeslání vám stáhneme .ics soubor pro kalendář a majitel
+                obdrží email s potvrzením.
               </p>
             </motion.div>
           </div>

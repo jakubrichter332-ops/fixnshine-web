@@ -1,8 +1,7 @@
 import { createClient } from "@supabase/supabase-js";
 
-// Tyto hodnoty se nastaví v .env souboru
-const supabaseUrl = import.meta.env.VITE_SUPABASE_URL || "";
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY || "";
+const supabaseUrl = "https://nksmxglddwruqbppljeu.supabase.co";
+const supabaseAnonKey = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Im5rc214Z2xkZHdydXFicHBsamV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzM2NzA3MDQsImV4cCI6MjA4OTI0NjcwNH0.nt-skr6zOXUQPToVLL_YV1TxyjC03E5kanEwyr58FrI";
 
 export const supabase = createClient(supabaseUrl, supabaseAnonKey);
 

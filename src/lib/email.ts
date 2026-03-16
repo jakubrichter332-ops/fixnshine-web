@@ -1,10 +1,9 @@
 import emailjs from "@emailjs/browser";
 
-// EmailJS konfigurace - nastaví se v .env
-const SERVICE_ID = import.meta.env.VITE_EMAILJS_SERVICE_ID || "";
-const OWNER_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_OWNER_TEMPLATE_ID || "";
-const CUSTOMER_TEMPLATE_ID = import.meta.env.VITE_EMAILJS_CUSTOMER_TEMPLATE_ID || "";
-const PUBLIC_KEY = import.meta.env.VITE_EMAILJS_PUBLIC_KEY || "";
+const SERVICE_ID = "service_j8a25xa";
+const OWNER_TEMPLATE_ID = "template_wzl67e5";
+const CUSTOMER_TEMPLATE_ID = "template_3d4bks5";
+const PUBLIC_KEY = "xzws2Uf1NV-_9gmub";
 
 interface BookingEmailData {
   customerName: string;

@@ -2,25 +2,21 @@ import { motion } from "framer-motion";
 import { Instagram, ArrowUpRight } from "lucide-react";
 
 import img01 from "../assets/gallery/01-bmw7-exterior.jpeg";
-import img02 from "../assets/gallery/02-bmw7-side.jpeg";
-import img03 from "../assets/gallery/03-bmw7-front.jpeg";
-import img04 from "../assets/gallery/04-bmw7-interior.jpeg";
-import img05 from "../assets/gallery/05-bmw3-interior-after.jpeg";
-import img06 from "../assets/gallery/06-seat-dashboard.jpeg";
-import img07 from "../assets/gallery/07-bmw3-interior.jpeg";
-import img08 from "../assets/gallery/08-bmw3-front.jpeg";
-import img09 from "../assets/gallery/09-bmw3-side.jpeg";
+import img02 from "../assets/gallery/02-bmw7-front.jpeg";
+import img03 from "../assets/gallery/03-bmw7-interior.jpeg";
+import img04 from "../assets/gallery/04-seat-interior.jpeg";
+import img05 from "../assets/gallery/05-seat-dashboard.jpeg";
+import img06 from "../assets/gallery/06-bmw3-interior.jpeg";
+import img07 from "../assets/gallery/07-bmw3-steering.jpeg";
 
 const galleryItems = [
   { id: 1, src: img01, label: "BMW 7 — Exteriér po detailingu" },
-  { id: 2, src: img05, label: "BMW 3 — Interiér po základním čištění (bez tepování)" },
-  { id: 3, src: img04, label: "BMW 7 — Luxusní interiér" },
-  { id: 4, src: img02, label: "BMW 7 — Lesk po nano vosku" },
-  { id: 5, src: img07, label: "BMW 3 — Interiér po čištění" },
-  { id: 6, src: img03, label: "BMW 7 — Dokonalý výsledek" },
-  { id: 7, src: img06, label: "Ošetřená palubní deska" },
-  { id: 8, src: img08, label: "BMW 3 — Exteriér" },
-  { id: 9, src: img09, label: "BMW 3 — Detailing v procesu" },
+  { id: 2, src: img02, label: "BMW 7 — Dokonalý lesk zepředu" },
+  { id: 3, src: img03, label: "BMW 7 — Luxusní interiér" },
+  { id: 4, src: img04, label: "Seat Leon — Interiér po čištění" },
+  { id: 5, src: img05, label: "Seat Leon — Ošetřená palubní deska" },
+  { id: 6, src: img06, label: "BMW 3 — Interiér po detailingu" },
+  { id: 7, src: img07, label: "BMW 3 — M volant v detailu" },
 ];
 
 export default function Gallery() {
@@ -61,7 +57,6 @@ export default function Gallery() {
               transition={{ duration: 0.5, delay: index * 0.08 }}
               className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer border border-border hover:border-gold/30 transition-all duration-300"
             >
-              {/* Fotka */}
               <img
                 src={item.src}
                 alt={item.label}

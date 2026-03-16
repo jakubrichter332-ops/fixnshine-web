@@ -19,11 +19,30 @@ const galleryItems = [
   { id: 7, src: img07, label: "BMW 3 — M volant v detailu" },
 ];
 
+function GalleryCard({ item }: { item: (typeof galleryItems)[number] }) {
+  return (
+    <div className="group relative flex-shrink-0 w-[75vw] sm:w-[45vw] lg:w-[30vw] aspect-[3/4] rounded-xl overflow-hidden border border-border hover:border-gold/30 transition-all duration-300">
+      <img
+        src={item.src}
+        alt={item.label}
+        className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
+        loading="lazy"
+        draggable={false}
+      />
+      <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-transparent to-transparent flex items-end p-4 sm:p-6">
+        <span className="text-text-primary text-xs sm:text-sm font-medium uppercase tracking-widest">
+          {item.label}
+        </span>
+      </div>
+    </div>
+  );
+}
+
 export default function Gallery() {
   return (
-    <section id="galerie" className="py-16 sm:py-24 bg-surface">
+    <section id="galerie" className="py-16 sm:py-24 bg-surface overflow-hidden">
+      {/* Section header */}
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-        {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}
@@ -32,49 +51,43 @@ export default function Gallery() {
           className="text-center mb-10 sm:mb-16"
         >
           <span className="text-gold text-sm uppercase tracking-widest font-medium">
-            Naše práce
+            Galerie
           </span>
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-bold mt-3 sm:mt-4 mb-4 sm:mb-6">
-            Galerie{" "}
+            Naše práce{" "}
             <span className="text-transparent bg-clip-text bg-gradient-to-r from-gold to-gold-light">
-              proměn
+              mluví za vše
             </span>
           </h2>
           <p className="text-text-secondary max-w-2xl mx-auto text-sm sm:text-base">
-            Podívejte se na výsledky naší práce. Každý vůz opouští naši péči v
-            dokonalém stavu.
+            Prohlédněte si výsledky naší práce. Každé auto opouští naši dílnu
+            ve špičkovém stavu.
           </p>
         </motion.div>
+      </div>
 
-        {/* Gallery grid */}
-        <div className="grid grid-cols-2 lg:grid-cols-3 gap-3 sm:gap-4">
-          {galleryItems.map((item, index) => (
-            <motion.div
-              key={item.id}
-              initial={{ opacity: 0, scale: 0.95 }}
-              whileInView={{ opacity: 1, scale: 1 }}
-              viewport={{ once: true }}
-              transition={{ duration: 0.5, delay: index * 0.08 }}
-              className="group relative aspect-square rounded-lg overflow-hidden cursor-pointer border border-border hover:border-gold/30 transition-all duration-300"
-            >
-              <img
-                src={item.src}
-                alt={item.label}
-                className="w-full h-full object-cover transition-transform duration-500 group-hover:scale-110"
-                loading="lazy"
-              />
-
-              {/* Hover overlay */}
-              <div className="absolute inset-0 bg-gradient-to-t from-primary/90 via-primary/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end p-3 sm:p-4">
-                <span className="text-text-primary text-xs sm:text-sm font-medium">
-                  {item.label}
-                </span>
-              </div>
-            </motion.div>
+      {/* Auto-scrolling carousel */}
+      <div
+        className="relative group/carousel"
+        style={{
+          maskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+          WebkitMaskImage: "linear-gradient(to right, transparent, black 5%, black 95%, transparent)",
+        }}
+      >
+        <div className="flex gap-4 sm:gap-6 w-max animate-[marquee_40s_linear_infinite] group-hover/carousel:[animation-play-state:paused]">
+          {/* Original set */}
+          {galleryItems.map((item) => (
+            <GalleryCard key={`a-${item.id}`} item={item} />
+          ))}
+          {/* Duplicated set for seamless loop */}
+          {galleryItems.map((item) => (
+            <GalleryCard key={`b-${item.id}`} item={item} />
           ))}
         </div>
+      </div>
 
-        {/* Instagram CTA */}
+      {/* Instagram CTA */}
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
           whileInView={{ opacity: 1, y: 0 }}

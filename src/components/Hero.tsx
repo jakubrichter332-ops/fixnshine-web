@@ -5,17 +5,18 @@ import logo from "../assets/logo.jpeg";
 export default function Hero() {
   return (
     <section className="relative min-h-screen flex items-center justify-center overflow-hidden">
-      {/* Logo as background */}
+      {/* Logo as background - fades out smoothly */}
       <div className="absolute inset-0 flex items-center justify-center overflow-hidden">
         <img
           src={logo}
           alt=""
-          className="w-[60vw] max-w-[700px] opacity-10 object-contain select-none pointer-events-none"
+          className="w-[70vw] max-w-[800px] opacity-25 object-contain select-none pointer-events-none"
+          style={{ mask: "radial-gradient(circle, black 30%, transparent 70%)", WebkitMask: "radial-gradient(circle, black 30%, transparent 70%)" }}
         />
       </div>
 
       {/* Gradient overlays */}
-      <div className="absolute inset-0 bg-gradient-to-b from-primary/60 via-primary/80 to-primary" />
+      <div className="absolute inset-0 bg-gradient-to-b from-primary/30 via-primary/50 to-primary" />
       <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
         <div className="w-[40vw] max-w-[500px] aspect-square bg-gold/5 rounded-full blur-[100px]" />
       </div>
@@ -25,11 +26,11 @@ export default function Hero() {
           initial={{ opacity: 0, y: 20 }}
           animate={{ opacity: 1, y: 0 }}
           transition={{ duration: 0.6 }}
-          className="inline-flex items-center gap-2 bg-surface border border-border rounded-full px-4 sm:px-5 py-2 mb-6 sm:mb-8"
+          className="inline-flex items-center gap-3 bg-surface border border-gold/20 rounded-full px-6 sm:px-8 py-3 mb-8 sm:mb-10"
         >
-          <div className="w-2 h-2 bg-gold rounded-full animate-pulse" />
-          <span className="text-text-secondary text-xs sm:text-sm tracking-wide">
-            Premium ruční mytí aut
+          <div className="w-2.5 h-2.5 bg-gold rounded-full animate-pulse" />
+          <span className="text-gold text-sm sm:text-base font-medium uppercase tracking-widest">
+            Premium ruční mytí & detailing v Praze
           </span>
         </motion.div>
 

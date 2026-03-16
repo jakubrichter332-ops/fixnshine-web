@@ -11,8 +11,8 @@ const contactInfo = [
   {
     icon: <Mail size={22} />,
     label: "Email",
-    value: "jakub.richter@fixnshine.cz",
-    href: "mailto:jakub.richter@fixnshine.cz",
+    value: "fns.fixnshine@gmail.com",
+    href: "mailto:fns.fixnshine@gmail.com",
   },
   {
     icon: <MapPin size={22} />,
@@ -131,7 +131,7 @@ export default function Contact() {
             <Phone size={20} />
           </a>
           <a
-            href="mailto:jakub.richter@fixnshine.cz"
+            href="mailto:fns.fixnshine@gmail.com"
             className="w-12 h-12 bg-surface border border-border rounded-full flex items-center justify-center text-text-secondary hover:text-gold hover:border-gold/30 transition-all duration-200"
           >
             <Mail size={20} />

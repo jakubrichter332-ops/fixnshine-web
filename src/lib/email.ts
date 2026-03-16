@@ -24,7 +24,7 @@ export async function sendOwnerNotification(data: BookingEmailData) {
     SERVICE_ID,
     OWNER_TEMPLATE_ID,
     {
-      to_email: "jakub.richter@fixnshine.cz",
+      to_email: "fns.fixnshine@gmail.com",
       customer_name: data.customerName,
       customer_phone: data.customerPhone,
       customer_email: data.customerEmail || "Neuvedeno",

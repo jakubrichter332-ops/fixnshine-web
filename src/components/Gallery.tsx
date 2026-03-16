@@ -25,8 +25,8 @@ const galleryItems = [
 
 export default function Gallery() {
   return (
-    <section id="galerie" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface">
-      <div className="w-full max-w-[1400px] mx-auto">
+    <section id="galerie" className="py-16 sm:py-24 bg-surface">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

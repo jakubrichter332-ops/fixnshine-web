@@ -201,7 +201,7 @@ export default function Booking() {
     return (
       <section
         id="rezervace"
-        className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface"
+        className="py-16 sm:py-24 bg-surface"
       >
         <motion.div
           initial={{ opacity: 0, scale: 0.95 }}
@@ -252,9 +252,9 @@ export default function Booking() {
   return (
     <section
       id="rezervace"
-      className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8 bg-surface"
+      className="py-16 sm:py-24 bg-surface"
     >
-      <div className="w-full max-w-[1400px] mx-auto">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

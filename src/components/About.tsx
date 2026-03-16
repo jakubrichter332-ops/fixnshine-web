@@ -26,8 +26,8 @@ const features = [
 
 export default function About() {
   return (
-    <section id="o-nas" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[1400px] mx-auto">
+    <section id="o-nas" className="py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         <div className="grid lg:grid-cols-2 gap-10 lg:gap-16 items-center">
           {/* Left side - text */}
           <motion.div

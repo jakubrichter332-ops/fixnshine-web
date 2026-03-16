@@ -1,7 +1,7 @@
 export default function Footer() {
   return (
-    <footer className="w-full border-t border-border py-6 sm:py-8 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[1400px] mx-auto flex flex-col sm:flex-row items-center justify-between gap-4">
+    <footer className="border-t border-border py-6 sm:py-8">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4">
         {/* Logo */}
         <div className="text-lg font-bold tracking-tight">
           <span className="text-gold">FIX</span>

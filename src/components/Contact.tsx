@@ -30,8 +30,8 @@ const contactInfo = [
 
 export default function Contact() {
   return (
-    <section id="kontakt" className="w-full py-16 sm:py-24 px-4 sm:px-6 lg:px-8">
-      <div className="w-full max-w-[1400px] mx-auto">
+    <section id="kontakt" className="py-16 sm:py-24">
+      <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
         {/* Section header */}
         <motion.div
           initial={{ opacity: 0, y: 20 }}

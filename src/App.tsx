@@ -10,6 +10,8 @@ import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Admin from "./components/Admin";
 import Privacy from "./components/Privacy";
+import SpringPromo from "./components/SpringPromo";
+import PromoBanner from "./components/PromoBanner";
 
 function HomePage() {
   return (
@@ -17,6 +19,7 @@ function HomePage() {
       <Navbar />
       <main>
         <Hero />
+        <SpringPromo />
         <Services />
         <Gallery />
         <BeforeAfter />
@@ -25,6 +28,7 @@ function HomePage() {
         <Contact />
       </main>
       <Footer />
+      <PromoBanner />
     </div>
   );
 }

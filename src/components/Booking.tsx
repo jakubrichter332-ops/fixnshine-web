@@ -103,6 +103,34 @@ export default function Booking() {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [gdprConsent, setGdprConsent] = useState(false);
   const [marketingConsent, setMarketingConsent] = useState(false);
+  const [promoCode, setPromoCode] = useState("");
+  const [promoApplied, setPromoApplied] = useState(false);
+
+  const VALID_PROMO = "JARO2026";
+  const PROMO_SERVICE_ID = "3"; // Interiér + Exteriér
+  const PROMO_DISCOUNT = 0.2; // 20 %
+
+  const isPromoValid =
+    promoApplied &&
+    selectedService === PROMO_SERVICE_ID;
+
+  const getDisplayPrice = (service: { id: string; price: string }) => {
+    if (promoApplied && service.id === PROMO_SERVICE_ID) {
+      const original = parseInt(service.price.replace(/\D/g, ""));
+      const discounted = Math.round(original * (1 - PROMO_DISCOUNT));
+      return `${discounted} Kč`;
+    }
+    return service.price;
+  };
+
+  const handleApplyPromo = () => {
+    if (promoCode.trim().toUpperCase() === VALID_PROMO) {
+      setPromoApplied(true);
+    } else {
+      setPromoApplied(false);
+      alert("Neplatný slevový kód.");
+    }
+  };
 
   // Když uživatel vybere datum, načti obsazené sloty z databáze
   useEffect(() => {
@@ -134,15 +162,17 @@ export default function Booking() {
       const dateStr = selectedDate.toISOString().split("T")[0];
 
       // 1. Ulož rezervaci do Supabase databáze
+      const finalPrice = getDisplayPrice(service);
+
       await createBooking({
         customer_name: formData.name,
         customer_phone: formData.phone,
         customer_email: formData.email,
         car: formData.car,
-        note: formData.note,
+        note: isPromoValid ? `${formData.note} [SLEVA JARO2026 -20%]`.trim() : formData.note,
         service_id: service.id,
         service_name: service.name,
-        service_price: service.price,
+        service_price: finalPrice,
         appointment_date: dateStr,
         appointment_time: selectedTime,
         marketing_consent: marketingConsent,
@@ -244,6 +274,8 @@ export default function Booking() {
               });
               setGdprConsent(false);
               setMarketingConsent(false);
+              setPromoCode("");
+              setPromoApplied(false);
             }}
             className="bg-gold hover:bg-gold-light text-primary px-8 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded"
           >
@@ -334,7 +366,14 @@ export default function Booking() {
                         </span>
                       </div>
                       <span className="text-gold text-xs sm:text-sm font-semibold ml-2 whitespace-nowrap">
-                        {service.price}
+                        {promoApplied && service.id === PROMO_SERVICE_ID ? (
+                          <>
+                            <span className="line-through text-text-muted mr-1.5">{service.price}</span>
+                            <span className="text-green-400">{getDisplayPrice(service)}</span>
+                          </>
+                        ) : (
+                          service.price
+                        )}
                       </span>
                     </label>
                   ))}
@@ -494,6 +533,37 @@ export default function Booking() {
                     placeholder="Speciální požadavky..."
                   />
                 </div>
+              </div>
+
+              {/* Promo code */}
+              <div>
+                <label className="text-text-primary font-medium mb-2 block text-sm">
+                  Slevový kód
+                </label>
+                <div className="flex gap-2">
+                  <input
+                    type="text"
+                    value={promoCode}
+                    onChange={(e) => {
+                      setPromoCode(e.target.value.toUpperCase());
+                      if (promoApplied) setPromoApplied(false);
+                    }}
+                    className="flex-1 bg-primary/50 border border-border rounded-lg px-4 py-3 text-sm text-text-primary placeholder-text-muted focus:border-gold focus:outline-none transition-colors uppercase"
+                    placeholder="Zadejte kód"
+                  />
+                  <button
+                    type="button"
+                    onClick={handleApplyPromo}
+                    className="bg-gold/10 border border-gold/30 text-gold hover:bg-gold/20 rounded-lg px-4 py-3 text-sm font-semibold transition-colors"
+                  >
+                    Uplatnit
+                  </button>
+                </div>
+                {promoApplied && (
+                  <p className="text-green-400 text-xs mt-1.5">
+                    Kód JARO2026 uplatněn — sleva 20 % na Interiér + Exteriér!
+                  </p>
+                )}
               </div>
 
               {/* GDPR consent */}

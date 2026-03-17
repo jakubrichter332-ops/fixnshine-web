@@ -11,11 +11,13 @@ import Footer from "./components/Footer";
 import Admin from "./components/Admin";
 import Privacy from "./components/Privacy";
 import SpringPromo from "./components/SpringPromo";
+import Reviews from "./components/Reviews";
 import PromoBanner from "./components/PromoBanner";
 
 function HomePage() {
   return (
     <div className="min-h-screen bg-primary overflow-x-hidden">
+      <Reviews />
       <Navbar />
       <main>
         <Hero />

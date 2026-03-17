@@ -102,6 +102,7 @@ export default function Booking() {
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [gdprConsent, setGdprConsent] = useState(false);
+  const [marketingConsent, setMarketingConsent] = useState(false);
 
   // Když uživatel vybere datum, načti obsazené sloty z databáze
   useEffect(() => {
@@ -144,6 +145,7 @@ export default function Booking() {
         service_price: service.price,
         appointment_date: dateStr,
         appointment_time: selectedTime,
+        marketing_consent: marketingConsent,
       });
 
       // 2. Generuj .ics pro kalendář
@@ -241,6 +243,7 @@ export default function Booking() {
                 note: "",
               });
               setGdprConsent(false);
+              setMarketingConsent(false);
             }}
             className="bg-gold hover:bg-gold-light text-primary px-8 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded"
           >
@@ -511,6 +514,20 @@ export default function Booking() {
                     Zásadami ochrany osobních údajů
                   </a>
                   . *
+                </span>
+              </label>
+
+              {/* Marketing consent */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={marketingConsent}
+                  onChange={(e) => setMarketingConsent(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-gold flex-shrink-0"
+                />
+                <span className="text-text-secondary text-xs leading-relaxed">
+                  Chci dostávat informace o akcích, slevách a novinkách
+                  FixNShine na e-mail. (nepovinné)
                 </span>
               </label>
 

@@ -17,6 +17,7 @@ export interface Booking {
   service_price: string;
   appointment_date: string;
   appointment_time: string;
+  marketing_consent?: boolean;
   created_at?: string;
 }
 
@@ -60,4 +61,25 @@ export async function getAllBookings(): Promise<Booking[]> {
 export async function deleteBooking(id: string) {
   const { error } = await supabase.from("bookings").delete().eq("id", id);
   if (error) throw error;
+}
+
+// Získat unikátní emaily zákazníků se souhlasem s marketingem
+export async function getMarketingEmails(): Promise<
+  { customer_name: string; customer_email: string }[]
+> {
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("customer_name, customer_email")
+    .eq("marketing_consent", true)
+    .neq("customer_email", "");
+
+  if (error) throw error;
+
+  // Deduplikace podle emailu
+  const seen = new Set<string>();
+  return (data || []).filter((row) => {
+    if (seen.has(row.customer_email)) return false;
+    seen.add(row.customer_email);
+    return true;
+  });
 }

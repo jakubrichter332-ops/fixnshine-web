@@ -1,6 +1,6 @@
 import { useState, useEffect } from "react";
-import { Lock, Loader2, Trash2, RefreshCw, LogOut, X } from "lucide-react";
-import { getAllBookings, deleteBooking, type Booking } from "../lib/supabase";
+import { Lock, Loader2, Trash2, RefreshCw, LogOut, X, Download } from "lucide-react";
+import { getAllBookings, deleteBooking, getMarketingEmails, type Booking } from "../lib/supabase";
 
 const ADMIN_PASSWORD = "fixnshine2024";
 
@@ -140,7 +140,33 @@ export default function Admin() {
           <h1 className="text-2xl font-bold text-text-primary">
             Správa rezervací
           </h1>
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-3 flex-wrap">
+            <button
+              onClick={async () => {
+                try {
+                  const emails = await getMarketingEmails();
+                  if (emails.length === 0) {
+                    alert("Žádní zákazníci se souhlasem s marketingem.");
+                    return;
+                  }
+                  const csv = "Jméno,Email\n" + emails.map((e) => `"${e.customer_name}","${e.customer_email}"`).join("\n");
+                  const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+                  const url = URL.createObjectURL(blob);
+                  const link = document.createElement("a");
+                  link.href = url;
+                  link.download = "marketing-emaily.csv";
+                  link.click();
+                  URL.revokeObjectURL(url);
+                } catch (err) {
+                  console.error("Chyba při exportu:", err);
+                  alert("Nepodařilo se exportovat emaily.");
+                }
+              }}
+              className="flex items-center gap-2 bg-gold/10 border border-gold/30 rounded-lg px-4 py-2 text-sm text-gold hover:bg-gold/20 transition-colors"
+            >
+              <Download size={16} />
+              Exportovat emaily
+            </button>
             <button
               onClick={fetchBookings}
               disabled={loading}

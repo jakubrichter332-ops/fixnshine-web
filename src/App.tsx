@@ -9,6 +9,7 @@ import Booking from "./components/Booking";
 import Contact from "./components/Contact";
 import Footer from "./components/Footer";
 import Admin from "./components/Admin";
+import Privacy from "./components/Privacy";
 
 function HomePage() {
   return (
@@ -33,6 +34,7 @@ function App() {
     <Routes>
       <Route path="/" element={<HomePage />} />
       <Route path="/admin" element={<Admin />} />
+      <Route path="/gdpr" element={<Privacy />} />
     </Routes>
   );
 }

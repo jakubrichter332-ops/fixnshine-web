@@ -101,6 +101,7 @@ export default function Booking() {
     note: "",
   });
   const [isSubmitted, setIsSubmitted] = useState(false);
+  const [gdprConsent, setGdprConsent] = useState(false);
 
   // Když uživatel vybere datum, načti obsazené sloty z databáze
   useEffect(() => {
@@ -239,6 +240,7 @@ export default function Booking() {
                 car: "",
                 note: "",
               });
+              setGdprConsent(false);
             }}
             className="bg-gold hover:bg-gold-light text-primary px-8 py-3 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded"
           >
@@ -491,6 +493,27 @@ export default function Booking() {
                 </div>
               </div>
 
+              {/* GDPR consent */}
+              <label className="flex items-start gap-3 cursor-pointer">
+                <input
+                  type="checkbox"
+                  checked={gdprConsent}
+                  onChange={(e) => setGdprConsent(e.target.checked)}
+                  className="mt-0.5 w-4 h-4 accent-gold flex-shrink-0"
+                />
+                <span className="text-text-secondary text-xs leading-relaxed">
+                  Souhlasím se zpracováním osobních údajů v souladu se{" "}
+                  <a
+                    href="/gdpr"
+                    target="_blank"
+                    className="text-gold hover:text-gold-light underline"
+                  >
+                    Zásadami ochrany osobních údajů
+                  </a>
+                  . *
+                </span>
+              </label>
+
               {/* Submit */}
               <button
                 type="submit"
@@ -498,6 +521,7 @@ export default function Booking() {
                   !selectedDate ||
                   !selectedTime ||
                   !selectedService ||
+                  !gdprConsent ||
                   isSubmitting
                 }
                 className="w-full bg-gold hover:bg-gold-light disabled:bg-gold/30 disabled:cursor-not-allowed text-primary py-4 text-sm font-semibold uppercase tracking-widest transition-all duration-200 rounded-lg flex items-center justify-center gap-2"

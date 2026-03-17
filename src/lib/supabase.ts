@@ -41,3 +41,23 @@ export async function getBookedSlots(date: string): Promise<string[]> {
   if (error) throw error;
   return (data || []).map((b) => b.appointment_time);
 }
+
+// Získat všechny budoucí rezervace (pro admin panel)
+export async function getAllBookings(): Promise<Booking[]> {
+  const today = new Date().toISOString().split("T")[0];
+  const { data, error } = await supabase
+    .from("bookings")
+    .select("*")
+    .gte("appointment_date", today)
+    .order("appointment_date", { ascending: true })
+    .order("appointment_time", { ascending: true });
+
+  if (error) throw error;
+  return data || [];
+}
+
+// Smazat rezervaci podle ID
+export async function deleteBooking(id: string) {
+  const { error } = await supabase.from("bookings").delete().eq("id", id);
+  if (error) throw error;
+}

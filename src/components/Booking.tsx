@@ -10,6 +10,7 @@ import {
   Car,
   Check,
   Loader2,
+  AlertCircle,
 } from "lucide-react";
 import "react-day-picker/style.css";
 import { createBooking, getBookedSlots } from "../lib/supabase";
@@ -35,6 +36,13 @@ const ALL_TIME_SLOTS = [
   "15:00",
   "16:00",
 ];
+
+function isWithin24h(date: Date, time: string): boolean {
+  const [hours, minutes] = time.split(":").map(Number);
+  const slot = new Date(date);
+  slot.setHours(hours, minutes, 0, 0);
+  return slot.getTime() - Date.now() < 24 * 60 * 60 * 1000;
+}
 
 function toLocalDateStr(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
@@ -233,11 +241,12 @@ export default function Booking() {
     }
   };
 
-  const today = new Date();
-  today.setHours(0, 0, 0, 0);
+  const tomorrow = new Date();
+  tomorrow.setDate(tomorrow.getDate() + 1);
+  tomorrow.setHours(0, 0, 0, 0);
 
-  // Neděle (0) a sobotu (6) zakážeme
-  const disabledDays = [{ before: today }, { dayOfWeek: [0] }];
+  // Zakážeme dny dříve než zítra (vše dnes je < 24h) + neděle
+  const disabledDays = [{ before: tomorrow }, { dayOfWeek: [0] }];
 
   if (isSubmitted) {
     return (
@@ -322,6 +331,16 @@ export default function Booking() {
             Vyberte si službu, datum a čas. Po odeslání vám i nám přijde
             potvrzení a termín se zobrazí jako obsazený.
           </p>
+          <div className="inline-flex items-center gap-2.5 mt-5 bg-gold/5 border border-gold/20 rounded-lg px-4 py-3 text-sm text-text-secondary">
+            <AlertCircle size={16} className="text-gold flex-shrink-0" />
+            <span>
+              Rezervace musí být provedena <strong className="text-text-primary">nejméně 24 hodin předem</strong>.
+              Pro expresní objednávky volejte{" "}
+              <a href="tel:+420608144005" className="text-gold hover:text-gold-light underline font-medium">
+                +420 608 144 005
+              </a>.
+            </span>
+          </div>
         </motion.div>
 
         <form onSubmit={handleSubmit}>
@@ -433,14 +452,16 @@ export default function Booking() {
                   <div className="grid grid-cols-3 gap-2">
                     {ALL_TIME_SLOTS.map((time) => {
                       const isBooked = bookedSlots.includes(time);
+                      const tooSoon = selectedDate ? isWithin24h(selectedDate, time) : false;
+                      const unavailable = isBooked || tooSoon;
                       return (
                         <button
                           key={time}
                           type="button"
-                          disabled={isBooked}
+                          disabled={unavailable}
                           onClick={() => setSelectedTime(time)}
                           className={`py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
-                            isBooked
+                            unavailable
                               ? "border-border/50 bg-primary/20 text-text-muted/40 cursor-not-allowed line-through"
                               : selectedTime === time
                               ? "border-gold bg-gold/10 text-gold"
@@ -451,6 +472,11 @@ export default function Booking() {
                           {isBooked && (
                             <span className="block text-[10px] no-underline leading-tight">
                               obsazeno
+                            </span>
+                          )}
+                          {tooSoon && !isBooked && (
+                            <span className="block text-[10px] no-underline leading-tight">
+                              &lt; 24h
                             </span>
                           )}
                         </button>

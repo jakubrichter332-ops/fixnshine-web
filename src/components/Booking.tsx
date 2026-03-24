@@ -36,6 +36,10 @@ const ALL_TIME_SLOTS = [
   "16:00",
 ];
 
+function toLocalDateStr(date: Date): string {
+  return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
+}
+
 function generateICS(
   date: Date,
   time: string,
@@ -139,7 +143,7 @@ export default function Booking() {
       return;
     }
 
-    const dateStr = selectedDate.toISOString().split("T")[0];
+    const dateStr = toLocalDateStr(selectedDate);
     setLoadingSlots(true);
     setSelectedTime(""); // Reset vybraného času
 
@@ -159,7 +163,7 @@ export default function Booking() {
     setIsSubmitting(true);
 
     try {
-      const dateStr = selectedDate.toISOString().split("T")[0];
+      const dateStr = toLocalDateStr(selectedDate);
 
       // 1. Ulož rezervaci do Supabase databáze
       const finalPrice = getDisplayPrice(service);

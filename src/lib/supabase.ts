@@ -43,15 +43,18 @@ export async function getBookedSlots(date: string): Promise<string[]> {
   return (data || []).map((b) => b.appointment_time);
 }
 
-// Získat všechny budoucí rezervace (pro admin panel)
+// Získat všechny rezervace (pro admin panel) — posledních 30 dní + budoucí
 export async function getAllBookings(): Promise<Booking[]> {
-  const today = new Date().toISOString().split("T")[0];
+  const from = new Date();
+  from.setDate(from.getDate() - 30);
+  const fromStr = from.toISOString().split("T")[0];
+
   const { data, error } = await supabase
     .from("bookings")
     .select("*")
-    .gte("appointment_date", today)
-    .order("appointment_date", { ascending: true })
-    .order("appointment_time", { ascending: true });
+    .gte("appointment_date", fromStr)
+    .order("appointment_date", { ascending: false })
+    .order("appointment_time", { ascending: false });
 
   if (error) throw error;
   return data || [];

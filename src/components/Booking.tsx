@@ -327,10 +327,10 @@ export default function Booking() {
           <div className="inline-flex items-center gap-2.5 mt-5 bg-gold/5 border border-gold/20 rounded-lg px-4 py-3 text-sm text-text-secondary">
             <AlertCircle size={16} className="text-gold flex-shrink-0" />
             <span>
-              Rezervace musí být provedena <strong className="text-text-primary">nejméně 24 hodin předem</strong>.
-              Pro expresní objednávky volejte{" "}
+              Online rezervace nejméně <strong className="text-text-primary">24 hodin předem</strong>.
+              Případně nás kontaktujte{" "}
               <a href="tel:+420608144005" className="text-gold hover:text-gold-light underline font-medium">
-                +420 608 144 005
+                telefonicky
               </a>.
             </span>
           </div>

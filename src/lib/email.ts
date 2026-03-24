@@ -1,5 +1,25 @@
 import emailjs from "@emailjs/browser";
 
+const TELEGRAM_BOT_TOKEN = "8358862048:AAHBLwT8Jo4bUyV5FLJcY638zDkFJuuclW8";
+const TELEGRAM_CHAT_ID = "5827044072";
+
+export async function sendTelegramNotification(data: BookingEmailData) {
+  const text =
+    `🚗 *Nová rezervace FixNShine!*\n\n` +
+    `👤 ${data.customerName}\n` +
+    `📞 ${data.customerPhone}\n` +
+    `🔧 ${data.serviceName} — ${data.servicePrice}\n` +
+    `📅 ${data.date} v ${data.time}\n` +
+    `🚙 ${data.car || "Auto neuvedeno"}\n` +
+    (data.note ? `📝 ${data.note}` : "");
+
+  await fetch(`https://api.telegram.org/bot${TELEGRAM_BOT_TOKEN}/sendMessage`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ chat_id: TELEGRAM_CHAT_ID, text, parse_mode: "Markdown" }),
+  });
+}
+
 const SERVICE_ID = "service_j8a25xa";
 const OWNER_TEMPLATE_ID = "template_wzl67e5";
 const CUSTOMER_TEMPLATE_ID = "template_3d4bks5";

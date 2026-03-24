@@ -13,7 +13,7 @@ import {
 } from "lucide-react";
 import "react-day-picker/style.css";
 import { createBooking, getBookedSlots } from "../lib/supabase";
-import { sendOwnerNotification, sendCustomerConfirmation } from "../lib/email";
+import { sendOwnerNotification, sendCustomerConfirmation, sendTelegramNotification } from "../lib/email";
 
 const services = [
   { id: "1", name: "Kompletní čištění exteriéru", price: "890 Kč" },
@@ -203,6 +203,11 @@ export default function Booking() {
       // 3. Pošli email TOBĚ (majiteli) s info o zákazníkovi + .ics pro kalendář
       await sendOwnerNotification(emailData).catch(() => {
         console.warn("Email majiteli se nepodařilo odeslat");
+      });
+
+      // 3b. Pošli Telegram notifikaci na mobil
+      await sendTelegramNotification(emailData).catch(() => {
+        console.warn("Telegram notifikace se nepodařila odeslat");
       });
 
       // 4. Pošli potvrzovací email ZÁKAZNÍKOVI s adresou

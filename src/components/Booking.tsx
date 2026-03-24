@@ -37,13 +37,6 @@ const ALL_TIME_SLOTS = [
   "16:00",
 ];
 
-function isWithin24h(date: Date, time: string): boolean {
-  const [hours, minutes] = time.split(":").map(Number);
-  const slot = new Date(date);
-  slot.setHours(hours, minutes, 0, 0);
-  return slot.getTime() - Date.now() < 24 * 60 * 60 * 1000;
-}
-
 function toLocalDateStr(date: Date): string {
   return `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, "0")}-${String(date.getDate()).padStart(2, "0")}`;
 }
@@ -241,12 +234,12 @@ export default function Booking() {
     }
   };
 
-  const tomorrow = new Date();
-  tomorrow.setDate(tomorrow.getDate() + 1);
-  tomorrow.setHours(0, 0, 0, 0);
+  // Pokud je po 19:00, zítřek nelze bookovat — nejdříve pozítří
+  const minBookingDate = new Date();
+  minBookingDate.setHours(0, 0, 0, 0);
+  minBookingDate.setDate(minBookingDate.getDate() + (new Date().getHours() >= 19 ? 2 : 1));
 
-  // Zakážeme dny dříve než zítra (vše dnes je < 24h) + neděle
-  const disabledDays = [{ before: tomorrow }, { dayOfWeek: [0] }];
+  const disabledDays = [{ before: minBookingDate }, { dayOfWeek: [0] }];
 
   if (isSubmitted) {
     return (
@@ -452,16 +445,14 @@ export default function Booking() {
                   <div className="grid grid-cols-3 gap-2">
                     {ALL_TIME_SLOTS.map((time) => {
                       const isBooked = bookedSlots.includes(time);
-                      const tooSoon = selectedDate ? isWithin24h(selectedDate, time) : false;
-                      const unavailable = isBooked || tooSoon;
                       return (
                         <button
                           key={time}
                           type="button"
-                          disabled={unavailable}
+                          disabled={isBooked}
                           onClick={() => setSelectedTime(time)}
                           className={`py-2.5 sm:py-3 rounded-lg text-sm font-medium transition-all duration-200 border ${
-                            unavailable
+                            isBooked
                               ? "border-border/50 bg-primary/20 text-text-muted/40 cursor-not-allowed line-through"
                               : selectedTime === time
                               ? "border-gold bg-gold/10 text-gold"
@@ -472,11 +463,6 @@ export default function Booking() {
                           {isBooked && (
                             <span className="block text-[10px] no-underline leading-tight">
                               obsazeno
-                            </span>
-                          )}
-                          {tooSoon && !isBooked && (
-                            <span className="block text-[10px] no-underline leading-tight">
-                              &lt; 24h
                             </span>
                           )}
                         </button>
